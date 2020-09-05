@@ -1,0 +1,20 @@
+@layout('layouts/master')
+
+@section('main')
+  <div class="flex justify-sb mb-3">
+    <h2 class="subtitle">{{ product.name }}</h2>
+    <a href="/products" class="button info">Back</a>
+  </div>
+
+  <table>
+    <tr>
+      <th>Description</th>
+      <td>{{ product.description }}</td>
+    </tr>
+
+    <tr>
+      <th>Maker</th>
+      <td>{{ product.maker }}</td>
+    </tr>
+  </table>
+@endsection

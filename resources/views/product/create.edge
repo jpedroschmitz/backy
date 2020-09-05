@@ -1,0 +1,42 @@
+@layout('layouts/master')
+
+@section('main')
+  <div class="flex justify-sb mb-3">
+    <h2 class="subtitle">New product</h2>
+    <a href="/products" class="button info">Back</a>
+  </div>
+
+  @if(flashMessages.has('success'))
+    <div class="alert success mb-2">
+      <p>{{ flashMessages.get('success') }}</p>
+    </div>
+  @endif
+
+  <form action="{{ route('ProductsController.store') }}" method="POST">
+    @!component('components/input', {
+      name: 'name',
+      text: 'Product name',
+      type: 'text',
+      value: flashMessages.get('name') || '',
+      error: flashMessages.has('errors.name') && flashMessages.get('errors.name')
+    })
+
+    @!component('components/input', {
+      name: 'description',
+      text: 'Product description',
+      type: 'text',
+      value: flashMessages.get('description') || '',
+      error: flashMessages.has('errors.description') && flashMessages.get('errors.description')
+    })
+
+    @!component('components/input', {
+      name: 'maker',
+      text: 'Product maker',
+      type: 'text',
+      value: flashMessages.get('maker') || '',
+      error: flashMessages.has('errors.maker') && flashMessages.get('errors.maker')
+    })
+
+    <button type="submit" class="button success mt-2">Save</button>
+  </form>
+@endsection

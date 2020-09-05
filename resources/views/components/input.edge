@@ -1,0 +1,7 @@
+<div class="form-group">
+  <label for="{{ name }}">{{ text }}</label>
+  <input type="{{ type }}" name="{{ name }}" value="{{ value }}" />
+  @if(error)
+    <span class="error">{{ error }}</span>
+  @endif
+</div>
