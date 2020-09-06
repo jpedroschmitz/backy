@@ -2,7 +2,7 @@
 
 @section('main')
   <div class="flex justify-sb mb-3">
-    <h2 class="subtitle">New product</h2>
+    <h2 class="subtitle">New Costumer</h2>
     <a href="/costumers" class="button info">Back</a>
   </div>
 
@@ -45,37 +45,37 @@
       error: flashMessages.has('errors.number') && flashMessages.get('errors.number')
     })
 
-@!component('components/input', {
-  name: 'district',
-  text: 'District',
-  type: 'text',
-  value: flashMessages.get('district') || '',
-  error: flashMessages.has('errors.district') && flashMessages.get('errors.district')
-})
+    @!component('components/input', {
+      name: 'district',
+      text: 'District',
+      type: 'text',
+      value: flashMessages.get('district') || '',
+      error: flashMessages.has('errors.district') && flashMessages.get('errors.district')
+    })
 
-@!component('components/input', {
-  name: 'city',
-  text: 'City',
-  type: 'text',
-  value: flashMessages.get('city') || '',
-  error: flashMessages.has('errors.city') && flashMessages.get('errors.city')
-})
+    @!component('components/input', {
+      name: 'city',
+      text: 'City',
+      type: 'text',
+      value: flashMessages.get('city') || '',
+      error: flashMessages.has('errors.city') && flashMessages.get('errors.city')
+    })
 
-@!component('components/input', {
-  name: 'zip',
-  text: 'ZIP',
-  type: 'text',
-  value: flashMessages.get('zip') || '',
-  error: flashMessages.has('errors.zip') && flashMessages.get('errors.zip')
-})
+    @!component('components/input', {
+      name: 'zip',
+      text: 'ZIP',
+      type: 'text',
+      value: flashMessages.get('zip') || '',
+      error: flashMessages.has('errors.zip') && flashMessages.get('errors.zip')
+    })
 
-@!component('components/input', {
-  name: 'state',
-  text: 'State',
-  type: 'text',
-  value: flashMessages.get('state') || '',
-  error: flashMessages.has('errors.state') && flashMessages.get('errors.state')
-})
+    @!component('components/input', {
+      name: 'state',
+      text: 'State',
+      type: 'text',
+      value: flashMessages.get('state') || '',
+      error: flashMessages.has('errors.state') && flashMessages.get('errors.state')
+    })
 
     <button type="submit" class="button success mt-2">Save</button>
   </form>

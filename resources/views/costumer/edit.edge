@@ -45,37 +45,37 @@
       error: flashMessages.has('errors.number') && flashMessages.get('errors.number')
     })
 
-@!component('components/input', {
-  name: 'district',
-  text: 'District',
-  type: 'text',
-  value: costumer.district || '',
-  error: flashMessages.has('errors.district') && flashMessages.get('errors.district')
-})
+    @!component('components/input', {
+      name: 'district',
+      text: 'District',
+      type: 'text',
+      value: costumer.district || '',
+      error: flashMessages.has('errors.district') && flashMessages.get('errors.district')
+    })
 
-@!component('components/input', {
-  name: 'city',
-  text: 'City',
-  type: 'text',
-  value: costumer.city || '',
-  error: flashMessages.has('errors.city') && flashMessages.get('errors.city')
-})
+    @!component('components/input', {
+      name: 'city',
+      text: 'City',
+      type: 'text',
+      value: costumer.city || '',
+      error: flashMessages.has('errors.city') && flashMessages.get('errors.city')
+    })
 
-@!component('components/input', {
-  name: 'zip',
-  text: 'ZIP',
-  type: 'text',
-  value: costumer.zip || '',
-  error: flashMessages.has('errors.zip') && flashMessages.get('errors.zip')
-})
+    @!component('components/input', {
+      name: 'zip',
+      text: 'ZIP',
+      type: 'text',
+      value: costumer.zip || '',
+      error: flashMessages.has('errors.zip') && flashMessages.get('errors.zip')
+    })
 
-@!component('components/input', {
-  name: 'state',
-  text: 'State',
-  type: 'text',
-  value: costumer.state || '',
-  error: flashMessages.has('errors.state') && flashMessages.get('errors.state')
-})
+    @!component('components/input', {
+      name: 'state',
+      text: 'State',
+      type: 'text',
+      value: costumer.state || '',
+      error: flashMessages.has('errors.state') && flashMessages.get('errors.state')
+    })
 
     <button type="submit" class="button success">Save</button>
   </form>
