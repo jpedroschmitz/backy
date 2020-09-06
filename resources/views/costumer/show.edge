@@ -1,0 +1,46 @@
+@layout('layouts/master')
+
+@section('main')
+  <div class="flex justify-sb mb-3">
+    <h2 class="subtitle">{{ costumer.name }}</h2>
+    <a href="/costumers" class="button info">Back</a>
+  </div>
+
+  <table>
+    <tr>
+      <th>CPF</th>
+      <td>{{ costumer.cpf }}</td>
+    </tr>
+
+    <tr>
+      <th>Street</th>
+      <td>{{ costumer.street }}</td>
+    </tr>
+    
+    <tr>
+      <th>Number</th>
+      <td>{{ costumer.number }}</td>
+    </tr>
+
+    <tr>
+      <th>District</th>
+      <td>{{ costumer.district }}</td>
+    </tr>
+
+    <tr>
+      <th>City</th>
+      <td>{{ costumer.city }}</td>
+    </tr>
+
+    <tr>
+      <th>ZIP</th>
+      <td>{{ costumer.zip }}</td>
+    </tr>
+
+    <tr>
+      <th>State</th>
+      <td>{{ costumer.state }}</td>
+    </tr>
+
+  </table>
+@endsection

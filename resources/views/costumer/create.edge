@@ -1,0 +1,82 @@
+@layout('layouts/master')
+
+@section('main')
+  <div class="flex justify-sb mb-3">
+    <h2 class="subtitle">New Costumer</h2>
+    <a href="/costumers" class="button info">Back</a>
+  </div>
+
+  @if(flashMessages.has('success'))
+    <div class="alert success mb-2">
+      <p>{{ flashMessages.get('success') }}</p>
+    </div>
+  @endif
+
+  <form action="{{ route('CostumersController.store') }}" method="POST">
+    @!component('components/input', {
+      name: 'name',
+      text: 'Name',
+      type: 'text',
+      value: flashMessages.get('name') || '',
+      error: flashMessages.has('errors.name') && flashMessages.get('errors.name')
+    })
+
+    @!component('components/input', {
+      name: 'cpf',
+      text: 'CPF',
+      type: 'text',
+      value: flashMessages.get('cpf') || '',
+      error: flashMessages.has('errors.cpf') && flashMessages.get('errors.cpf')
+    })
+
+    @!component('components/input', {
+      name: 'street',
+      text: 'Street',
+      type: 'text',
+      value: flashMessages.get('street') || '',
+      error: flashMessages.has('errors.street') && flashMessages.get('errors.street')
+    })
+
+    @!component('components/input', {
+      name: 'number',
+      text: 'Number',
+      type: 'text',
+      value: flashMessages.get('number') || '',
+      error: flashMessages.has('errors.number') && flashMessages.get('errors.number')
+    })
+
+    @!component('components/input', {
+      name: 'district',
+      text: 'District',
+      type: 'text',
+      value: flashMessages.get('district') || '',
+      error: flashMessages.has('errors.district') && flashMessages.get('errors.district')
+    })
+
+    @!component('components/input', {
+      name: 'city',
+      text: 'City',
+      type: 'text',
+      value: flashMessages.get('city') || '',
+      error: flashMessages.has('errors.city') && flashMessages.get('errors.city')
+    })
+
+    @!component('components/input', {
+      name: 'zip',
+      text: 'ZIP',
+      type: 'text',
+      value: flashMessages.get('zip') || '',
+      error: flashMessages.has('errors.zip') && flashMessages.get('errors.zip')
+    })
+
+    @!component('components/input', {
+      name: 'state',
+      text: 'State',
+      type: 'text',
+      value: flashMessages.get('state') || '',
+      error: flashMessages.has('errors.state') && flashMessages.get('errors.state')
+    })
+
+    <button type="submit" class="button success mt-2">Save</button>
+  </form>
+@endsection
