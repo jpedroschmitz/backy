@@ -1,0 +1,44 @@
+@layout('layouts/master')
+
+@section('main')
+  <div class="flex justify-sb mb-3">
+    <h2 class="subtitle">Orders</h2>
+    <a href="/orders/create" class="button success">New</a>
+  </div>
+
+  @if(flashMessages.has('success'))
+    <div class="alert success">
+      <p>{{ flashMessages.get('success') }}</p>
+    </div>
+  @endif
+
+  <table>
+    <tr>
+      <th>Product</th>
+      <th>Costumer</th>
+      <th>Quantity</th>
+      <th>Price</th>
+      <th>Discount</th>
+      <th>Total</th>
+      <th colspan="3"></th>
+    </tr>
+
+    @each(order in orders)
+      <tr>
+        <td>{{ order.product }}</td>
+        <td>{{ order.costumer }}</td>
+        <td>{{ order.quantity }}</td>
+        <td>{{ order.price }}</td>
+        <td>{{ order.discount }}</td>
+        <td>{{ order.total }}</td>
+        <td><a href="/orders/{{ order.id }}" class="button info">View</a></td>
+        <td><a href="/orders/{{ order.id }}/edit" class="button warning">Edit</a></td>
+        <td>
+          <form action="{{ route('OrdersController.destroy', { params: { id: product.id } })}}?_method=DELETE" method="POST">
+            <button type="submit" class="button danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+    @endeach
+  </table>
+@endsection

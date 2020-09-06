@@ -1,0 +1,66 @@
+@layout('layouts/master')
+
+@section('main')
+  <div class="flex justify-sb mb-3">
+    <h2 class="subtitle">New Order</h2>
+    <a href="/orders" class="button info">Back</a>
+  </div>
+
+  @if(flashMessages.has('success'))
+    <div class="alert success mb-2">
+      <p>{{ flashMessages.get('success') }}</p>
+    </div>
+  @endif
+
+  <form action="{{ route('OrdersController.store') }}" method="POST">
+    @!component('components/input', {
+      name: 'product',
+      text: 'Product',
+      type: 'text',
+      value: flashMessages.get('product') || '',
+      error: flashMessages.has('errors.product') && flashMessages.get('errors.product')
+    })
+
+    @!component('components/input', {
+      name: 'costumer',
+      text: 'Costumer',
+      type: 'text',
+      value: flashMessages.get('costumer') || '',
+      error: flashMessages.has('errors.costumer') && flashMessages.get('errors.costumer')
+    })
+
+    @!component('components/input', {
+      name: 'quantity',
+      text: 'Quantity',
+      type: 'text',
+      value: flashMessages.get('quantity') || '',
+      error: flashMessages.has('errors.quantity') && flashMessages.get('errors.quantity')
+    })
+
+    @!component('components/input', {
+      name: 'price',
+      text: 'Price',
+      type: 'text',
+      value: flashMessages.get('price') || '',
+      error: flashMessages.has('errors.price') && flashMessages.get('errors.price')
+    })
+
+    @!component('components/input', {
+      name: 'discount',
+      text: 'Discount',
+      type: 'text',
+      value: flashMessages.get('discount') || '',
+      error: flashMessages.has('errors.discount') && flashMessages.get('errors.discount')
+    })
+
+    @!component('components/input', {
+      name: 'total',
+      text: 'Total',
+      type: 'text',
+      value: flashMessages.get('total') || '',
+      error: flashMessages.has('errors.total') && flashMessages.get('errors.total')
+    })
+
+    <button type="submit" class="button success mt-2">Save</button>
+  </form>
+@endsection

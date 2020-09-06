@@ -1,0 +1,41 @@
+@layout('layouts/master')
+
+@section('main')
+  <div class="flex justify-sb mb-3">
+    <h2 class="subtitle">{{ order.costumer.name }}</h2>
+    <a href="/orders" class="button info">Back</a>
+  </div>
+
+  <table>
+    <tr>
+      <th>Costumer</th>
+      <td>{{ order.costumer.name }}</td>
+    </tr>
+
+    <tr>
+      <th>Product</th>
+      <td>{{ order.product.name }}</td>
+    </tr>
+
+    <tr>
+      <th>Quantity</th>
+      <td>{{ order.quantity }}</td>
+    </tr>
+
+    <tr>
+      <th>Price</th>
+      <td>{{ order.price }}</td>
+    </tr>
+
+    <tr>
+      <th>Discount</th>
+      <td>{{ order.discount }}</td>
+    </tr>
+
+    <tr>
+      <th>Total</th>
+      <td>{{ order.total }}</td>
+    </tr>
+
+  </table>
+@endsection
