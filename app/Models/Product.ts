@@ -6,9 +6,6 @@ export default class Product extends BaseModel {
   public id: number;
 
   @column()
-  public orderId: number;
-
-  @column()
   public name: string;
 
   @column()

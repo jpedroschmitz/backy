@@ -7,12 +7,12 @@ export default class Orders extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments("id");
 
-      table.integer("product").notNullable();
-      table.integer("costumer").notNullable();
-      table.integer("quantity").notNullable();
-      table.decimal("price").notNullable();
-      table.decimal("discount");
-      table.decimal("total").notNullable();
+      table
+        .integer("costumer_id")
+        .references("id")
+        .inTable("costumers")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
 
       table.timestamps(true);
     });
