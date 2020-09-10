@@ -1,13 +1,13 @@
 import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
-import { schema } from "@ioc:Adonis/Core/Validator";
 
-// import Product from "App/Models/Product";
-// import Costumer from "App/Models/Costumer";
+import Product from "App/Models/Product";
+import Customer from "App/Models/Costumer";
 import Order from "App/Models/Order";
+import OrderProduct from "App/Models/OrderProduct";
 
 export default class OrdersController {
   public async index({ view }: HttpContextContract) {
-    const orders = await Order.all();
+    const orders = await Order.query().preload("customer");
 
     return view.render("order/index", {
       orders,
@@ -15,38 +15,56 @@ export default class OrdersController {
   }
 
   public async create({ view }: HttpContextContract) {
-    return view.render("order/create");
+    const customers = await Customer.all();
+    const products = await Product.all();
+
+    return view.render("order/create", {
+      customers,
+      products,
+    });
   }
 
-  public async store({ request, session, response }: HttpContextContract) {
-    const orderSchema = schema.create({
-      product: schema.string(),
-      costumer: schema.string(),
-      quantity: schema.number(),
-      price: schema.number(),
-      discount: schema.number(),
-      total: schema.number(),
-    });
+  public async store({ request, response }: HttpContextContract) {
+    try {
+      const {
+        order: { customer: customerId, products },
+      } = request.all();
 
-    const data = await request.validate({
-      schema: orderSchema,
-      messages: {
-        "product.required": "Please enter the product",
-        "costumer.required": "Please enter the costumer",
-        "quantity.required": "Please enter the quantity",
-        "price.required": "Please enter the price",
-      },
-      cacheKey: request.url(),
-    });
+      const order = new Order();
 
-    await Order.create(data);
+      const customer = await Customer.findOrFail(customerId);
+      await order.related("customer").associate(customer);
 
-    session.flash("success", "Order created successfully");
-    response.redirect("back");
+      products.forEach(
+        async ({ discount, product: productId, quantity, price, total }) => {
+          const item = new OrderProduct();
+          item.discount = discount ? parseFloat(discount) : 0;
+          item.quantity = parseInt(quantity);
+          item.price = parseFloat(price);
+          item.total = parseFloat(total);
+          item.productId = Number(productId);
+          item.orderId = order.id;
+
+          await order.related("items").save(item);
+        }
+      );
+
+      return response.json({
+        status: `success`,
+        message: `created with success`,
+      });
+    } catch (err) {
+      return response.status(err.status).json({
+        status: `error`,
+        message: err,
+      });
+    }
   }
 
   public async show({ params: { id }, view }: HttpContextContract) {
     const order = await Order.findOrFail(id);
+    await order.preload("customer");
+    await order.preload("items");
 
     return view.render("order/show", {
       order,
@@ -54,47 +72,59 @@ export default class OrdersController {
   }
 
   public async edit({ params: { id }, view }: HttpContextContract) {
+    const customers = await Customer.all();
+    const products = await Product.all();
+
     const order = await Order.findOrFail(id);
+    await order.preload("customer");
+    await order.preload("items");
 
     return view.render("order/edit", {
       order,
+      customers,
+      products,
     });
   }
 
   public async update({
     request,
-    session,
     response,
     params: { id },
   }: HttpContextContract) {
-    const orderSchema = schema.create({
-      product: schema.string(),
-      costumer: schema.string(),
-      quantity: schema.number(),
-      price: schema.number(),
-      discount: schema.number(),
-      total: schema.number(),
-    });
+    try {
+      const {
+        order: { products },
+      } = request.all();
 
-    const data = await request.validate({
-      schema: orderSchema,
-      messages: {
-        "product.required": "Please enter the product",
-        "costumer.required": "Please enter the costumer",
-        "quantity.required": "Please enter the quantity",
-        "price.required": "Please enter the price",
-      },
-      cacheKey: request.url(),
-    });
+      products.forEach(
+        async ({ discount, product: productId, quantity, price, total }) => {
+          const item = await OrderProduct.query()
+            .where("order_id", id)
+            .andWhere("product_id", productId)
+            .first();
 
-    const order = await Order.findOrFail(id);
+          item?.merge({
+            discount: discount ? parseFloat(discount) : 0,
+            quantity: parseInt(quantity),
+            price: parseFloat(price),
+            total: parseFloat(total),
+            productId: Number(productId),
+          });
 
-    order.merge(data);
+          await item?.save();
+        }
+      );
 
-    await order.save();
-
-    await session.flash("success", "Order updated successfully");
-    response.redirect("back");
+      return response.json({
+        status: `success`,
+        message: `updated with success`,
+      });
+    } catch (err) {
+      return response.status(err.status).json({
+        status: `error`,
+        message: err,
+      });
+    }
   }
 
   public async destroy({

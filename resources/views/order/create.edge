@@ -6,28 +6,23 @@
     <a href="/orders" class="button info">Back</a>
   </div>
 
-  @if(flashMessages.has('success'))
-    <div class="alert success mb-2">
-      <p>{{ flashMessages.get('success') }}</p>
-    </div>
-  @endif
+  <div class="alert success mb-2 none">
+    <p>Order created successfully!</p>
+  </div>
 
-  <form action="{{ route('OrdersController.store') }}" method="POST">
-    @!component('components/input', {
+  <form id="order-form">
+    @component('components/select', {
       name: 'product',
       text: 'Product',
-      type: 'text',
-      value: flashMessages.get('product') || '',
       error: flashMessages.has('errors.product') && flashMessages.get('errors.product')
     })
 
-    @!component('components/input', {
-      name: 'costumer',
-      text: 'Costumer',
-      type: 'text',
-      value: flashMessages.get('costumer') || '',
-      error: flashMessages.has('errors.costumer') && flashMessages.get('errors.costumer')
-    })
+      @slot('options')
+        @each(product in products)
+          <option value="{{ product.id }}" selected="{{ flashMessages.get('product') === product.name ? 'selected' : ''}}">{{ product.name}}</option>
+        @endeach
+      @endslot
+    @endcomponent
 
     @!component('components/input', {
       name: 'quantity',
@@ -53,14 +48,112 @@
       error: flashMessages.has('errors.discount') && flashMessages.get('errors.discount')
     })
 
-    @!component('components/input', {
-      name: 'total',
-      text: 'Total',
-      type: 'text',
-      value: flashMessages.get('total') || '',
-      error: flashMessages.has('errors.total') && flashMessages.get('errors.total')
+    <button type="button" id="add-more-product" class="button mt-2 info">Add</button>
+
+    <table id="products-table" class="my-2">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Costumer</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Discount</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+
+      <tbody></tbody>
+    </table>
+
+    @component('components/select', {
+      name: 'costumer',
+      text: 'Customer',
+      error: flashMessages.has('errors.costumer') && flashMessages.get('errors.costumer')
     })
 
-    <button type="submit" class="button success mt-2">Save</button>
+      @slot('options')
+        @each(costumer in customers)
+          <option value="{{ costumer.id }}" selected="{{ flashMessages.get('costumer') === costumer.name ? 'selected' : ''}}">{{ costumer.name}}</option>
+        @endeach
+      @endslot
+    @endcomponent
+
+    <button type="button" class="button success mt-2" id="save-order">Save</button>
   </form>
+
+  <script>
+    const addMoreButtonElement = document.getElementById('add-more-product');
+    const productsTable = document.querySelector('#products-table tbody');
+    const formElement = document.getElementById('order-form');
+    let order = { products: [] };
+
+    function calculateTotalPrice(quantity, price, discount) {
+      const itemPrice = (quantity * price);
+      const itemDiscount = itemPrice * (discount / 100);
+
+      return itemPrice - itemDiscount;
+    }
+
+    addMoreButtonElement.addEventListener("click", function () {
+      let formData = Object.fromEntries(new FormData(formElement).entries());
+
+      const { quantity, price, discount } = formData;
+      const productPrice = calculateTotalPrice(quantity, price, discount);
+
+      formData = {
+        ...formData,
+        total: productPrice,
+      }
+
+      saveOrder(formData);
+
+      const trElement = document.createElement('tr');
+
+      Object.entries(formData).forEach(function(element) {
+        const [_, value] = element;
+
+        const tdElement = document.createElement('td');
+        tdElement.innerText = value;
+
+        trElement.appendChild(tdElement);
+      });
+
+      productsTable.appendChild(trElement);
+
+      formElement.reset();
+    });
+
+    function saveOrder(productEntries) {
+      const auxOrder = { ...order };
+
+      auxOrder.products.push(productEntries);
+
+      order = auxOrder;
+    }
+
+    document.getElementById('save-order').addEventListener('click', async function() {
+      const customerId = document.querySelector('#costumer').value;
+
+      const rawResponse = await fetch("{{ route('OrdersController.store') }}", {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          order: {
+            customer: customerId,
+            products: order.products
+          }
+        })
+      });
+
+      const content = await rawResponse.json();
+
+      if (content.status === `success`) {
+        const alertEl = document.querySelector('.alert');
+        alertEl.classList.remove('none');
+      }
+    })
+  </script>
 @endsection

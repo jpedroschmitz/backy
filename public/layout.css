@@ -11,7 +11,7 @@ body {
   background-color: #f2f2fa;
   font-family: "Inter", sans-serif;
   font-size: 16px;
-  height: 100vh;
+  height: 100%;
   color: #6c6c80;
   position: relative;
 }
@@ -71,7 +71,7 @@ main {
   max-width: 720px;
   margin: auto;
   padding-top: 64px;
-  height: calc(100vh - 72px);
+  padding-bottom: 40px;
 }
 
 form {
@@ -84,7 +84,8 @@ form {
   margin-bottom: 8px;
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
   width: 100%;
   border: none;
   background: #fff;
@@ -168,6 +169,10 @@ table td form {
   margin-right: 16px;
 }
 
+.none {
+  display: none !important;
+}
+
 .flex {
   display: flex;
   align-items: center;
@@ -204,6 +209,11 @@ table td form {
   border: none;
   color: #fff;
   font-size: 16px;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .alert.success,
