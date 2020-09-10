@@ -17,6 +17,7 @@
       <th>Name</th>
       <th>Description</th>
       <th>Maker</th>
+      <th>Price</th>
       <th colspan="3"></th>
     </tr>
 
@@ -25,6 +26,7 @@
         <td>{{ product.name }}</td>
         <td>{{ product.description }}</td>
         <td>{{ product.maker }}</td>
+        <td>{{ product.price }}</td>
         <td><a href="/products/{{ product.id }}" class="button info">View</a></td>
         <td><a href="/products/{{ product.id }}/edit" class="button warning">Edit</a></td>
         <td>

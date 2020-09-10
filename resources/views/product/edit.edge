@@ -37,6 +37,14 @@
       error: flashMessages.has('errors.maker') && flashMessages.get('errors.maker')
     })
 
+    @!component('components/input', {
+      name: 'price',
+      text: 'Product price',
+      type: 'text',
+      value: product.price || '',
+      error: flashMessages.has('errors.price') && flashMessages.get('errors.price')
+    })
+
     <button type="submit" class="button success">Save</button>
   </form>
 @endsection
