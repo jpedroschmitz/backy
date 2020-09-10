@@ -29,6 +29,9 @@ export default class Costumer extends BaseModel {
   @column()
   public state: string;
 
+  @column()
+  public baseDiscount: number;
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;
 

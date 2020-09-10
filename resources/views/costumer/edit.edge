@@ -77,6 +77,14 @@
       error: flashMessages.has('errors.state') && flashMessages.get('errors.state')
     })
 
+     @!component('components/input', {
+      name: 'baseDiscount',
+      text: 'Base discount',
+      type: 'text',
+      value: costumer.baseDiscount || '',
+      error: flashMessages.has('errors.baseDiscount') && flashMessages.get('errors.baseDiscount')
+    })
+
     <button type="submit" class="button success">Save</button>
   </form>
 @endsection
