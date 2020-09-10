@@ -1,6 +1,8 @@
 <div class="form-group">
   <label for="{{ name }}">{{ text }}</label>
-  <input type="{{ type }}" id="{{ name}}" name="{{ name }}" value="{{ value }}" />
+  <select name="{{ name }}" id="{{ name }}" {{ disabled && 'disabled' }}>
+    {{{ $slots.options() }}}
+  </select>
   @if(error)
     <span class="error">{{ error }}</span>
   @endif

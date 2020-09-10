@@ -1,0 +1,30 @@
+@layout('layouts/master')
+
+@section('main')
+  <div class="flex justify-sb mb-3">
+    <h2 class="subtitle">Order from {{ order.customer.name }}</h2>
+    <a href="/orders" class="button info">Back</a>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Discount</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+
+    @each(item in order.items)
+      <tr>
+        <td>{{ item.productId }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.price }}</td>
+        <td>{{ item.discount }}</td>
+        <td>{{ item.total }}</td>
+      </tr>
+    @endeach
+  </table>
+@endsection

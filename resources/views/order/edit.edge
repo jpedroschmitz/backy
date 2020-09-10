@@ -1,0 +1,192 @@
+@layout('layouts/master')
+
+@section('main')
+  <div class="flex justify-sb mb-3">
+    <h2 class="subtitle">Update Order</h2>
+    <a href="/orders" class="button info">Back</a>
+  </div>
+
+  <div class="alert success mb-2 none">
+    <p>Order updated successfully!</p>
+  </div>
+
+  <form id="order-form">
+    @component('components/select', {
+      name: 'product',
+      text: 'Product',
+      disabled: true
+    })
+
+      @slot('options')
+        <option selected>Select a product</option>
+        @each(product in products)
+          <option value="{{ product.id }}">{{ product.name}}</option>
+        @endeach
+      @endslot
+    @endcomponent
+
+    @!component('components/input', {
+      name: 'quantity',
+      text: 'Quantity',
+      type: 'text',
+      value: '',
+    })
+
+    @!component('components/input', {
+      name: 'price',
+      text: 'Price',
+      type: 'text',
+      value: '',
+    })
+
+    @!component('components/input', {
+      name: 'discount',
+      text: 'Discount',
+      type: 'text',
+      value: '',
+    })
+
+    <button type="button" id="update-product" class="button mt-2 info" disabled>Update</button>
+
+    <table id="products-table" class="my-2">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Discount</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+
+      @each((item, index) in order.items)
+        <tr data-index="{{index}}">
+          <td data-name="product">{{ item.productId }}</td>
+          <td data-name="quantity">{{ item.quantity }}</td>
+          <td data-name="price">{{ item.price }}</td>
+          <td data-name="discount">{{ item.discount }}</td>
+          <td data-name="total">{{ item.total }}</td>
+        </tr>
+      @endeach
+    </table>
+
+    @component('components/select', {
+      name: 'costumer',
+      text: 'Customer',
+      disabled: true
+    })
+      @slot('options')
+        @each(costumer in customers)
+          <option value="{{ costumer.id }}" {{ order.costumerId === costumer.id ? 'selected' : ''}}>{{ costumer.name}}</option>
+        @endeach
+      @endslot
+    @endcomponent
+
+    <button type="button" class="button success mt-2" id="save-order">Save</button>
+  </form>
+
+  <script>
+    const updateProductEl = document.getElementById('update-product');
+    const productsTable = document.querySelector('#products-table tbody');
+    const formElement = document.getElementById('order-form');
+    let elementIndexToChange;
+    let order = { products: [] };
+
+    const allTableTrElements = document.querySelectorAll('#products-table tbody tr');
+
+    allTableTrElements.forEach(trElement => {
+      trElement.addEventListener('click', (event) => {
+        const indexElement = event.target.parentElement.dataset.index;
+
+        elementIndexToChange = indexElement;
+
+        const product = order.products[indexElement];
+        delete product.total;
+
+        Object.entries(product).map(item => {
+          const [name, value] = item;
+          document.querySelector(`#${name.toLowerCase()}`).value = value;
+        });
+
+        updateProductEl.disabled = false;
+      });
+    });
+
+    function calculateTotalPrice(quantity, price, discount) {
+      const itemPrice = (quantity * price);
+      const itemDiscount = itemPrice * (discount / 100);
+
+      return itemPrice - itemDiscount;
+    }
+
+    document.getElementById('save-order').addEventListener('click', async function() {
+      const rawResponse = await fetch("{{ route('OrdersController.update', { params: { id: order.id } })}}", {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          order: {
+            products: order.products
+          }
+        })
+      });
+
+      const content = await rawResponse.json();
+
+      if (content.status === `success`) {
+        const alertEl = document.querySelector('.alert');
+        alertEl.classList.remove('none');
+      }
+    })
+
+     updateProductEl.addEventListener("click", function () {
+      let formData = Object.fromEntries(new FormData(formElement).entries());
+
+      const { quantity, price, discount } = formData;
+      const productPrice = calculateTotalPrice(quantity, price, discount);
+
+      formData = {
+        ...formData,
+        total: productPrice,
+        product: document.querySelector('#product').value,
+      }
+
+      saveOrderInPosition(elementIndexToChange, formData);
+
+      const allTds = allTableTrElements[elementIndexToChange].children;
+
+      for (const item of allTds) {
+        item.innerText = formData[item.dataset.name];
+      }
+
+      formElement.reset();
+      updateProductEl.disabled = true;
+    });
+
+    function saveOrderInPosition(position, productEntries) {
+      const auxOrder = { ...order };
+
+      auxOrder.products[position] = productEntries;
+
+      order = auxOrder;
+    }
+
+    function addItemToArray(item) {
+      const auxOrder = { ...order };
+      auxOrder.products.push(item);
+      order = auxOrder;
+    }
+
+    @each(item in order.items)
+      addItemToArray({
+        product: {{ item.productId }},
+        quantity: {{ item.quantity }},
+        price: {{ item.price }},
+        discount: {{ item.discount }},
+        total: {{ item.total }},
+      });
+    @endeach
+  </script>
+@endsection

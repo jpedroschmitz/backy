@@ -1,14 +1,19 @@
 import BaseSchema from "@ioc:Adonis/Lucid/Schema";
 
-export default class Products extends BaseSchema {
-  protected tableName = "products";
+export default class Orders extends BaseSchema {
+  protected tableName = "orders";
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments("id");
-      table.string("name").notNullable();
-      table.string("description").notNullable();
-      table.string("maker").notNullable();
+
+      table
+        .integer("costumer_id")
+        .references("id")
+        .inTable("costumers")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
+
       table.timestamps(true);
     });
   }
