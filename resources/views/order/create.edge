@@ -19,7 +19,7 @@
 
       @slot('options')
         @each(product in products)
-          <option value="{{ product.id }}" selected="{{ flashMessages.get('product') === product.name ? 'selected' : ''}}">{{ product.name}}</option>
+          <option value="{{ product.id }}" {{ flashMessages.get('product') === product.name ? 'selected' : ''}} data-price="{{ product.price }}">{{ product.name}}</option>
         @endeach
       @endslot
     @endcomponent
@@ -36,7 +36,7 @@
       name: 'price',
       text: 'Price',
       type: 'text',
-      value: flashMessages.get('price') || '',
+      value: products[0].price || '',
       error: flashMessages.has('errors.price') && flashMessages.get('errors.price')
     })
 
@@ -44,7 +44,7 @@
       name: 'discount',
       text: 'Discount',
       type: 'text',
-      value: flashMessages.get('discount') || '',
+      value: customers[0].baseDiscount || '',
       error: flashMessages.has('errors.discount') && flashMessages.get('errors.discount')
     })
 
@@ -73,7 +73,7 @@
 
       @slot('options')
         @each(costumer in customers)
-          <option value="{{ costumer.id }}" selected="{{ flashMessages.get('costumer') === costumer.name ? 'selected' : ''}}">{{ costumer.name}}</option>
+          <option value="{{ costumer.id }}" selected="{{ flashMessages.get('costumer') === costumer.name ? 'selected' : ''}}" data-discount="{{ costumer.baseDiscount }}">{{ costumer.name}}</option>
         @endeach
       @endslot
     @endcomponent
@@ -122,6 +122,22 @@
 
       formElement.reset();
     });
+
+    document.querySelector('#product').addEventListener('change', function(e) {
+      const value = e.target.value;
+
+      const selectedOption = document.querySelector(`#product option[value='${value}']`);
+      const price = selectedOption.dataset.price;
+      document.querySelector('#price').value = price;
+    });
+
+    document.querySelector('#costumer').addEventListener('change', function(e) {
+      const value = e.target.value;
+
+      const selectedOption = document.querySelector(`#costumer option[value='${value}']`);
+      const discount = selectedOption.dataset.discount;
+      document.querySelector('#discount').value = discount;
+    })
 
     function saveOrder(productEntries) {
       const auxOrder = { ...order };

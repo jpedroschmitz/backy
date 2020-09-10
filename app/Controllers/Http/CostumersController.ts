@@ -25,6 +25,7 @@ export default class CostumersController {
       city: schema.string(),
       zip: schema.string(),
       state: schema.string(),
+      baseDiscount: schema.number(),
     });
 
     const data = await request.validate({
@@ -38,6 +39,7 @@ export default class CostumersController {
         "city.required": "Please enter the costumer city",
         "zip.required": "Please enter the costumer zip",
         "state.required": "Please enter the costumer state",
+        "baseDiscount.required": "Please enter the costumer base discount",
       },
       cacheKey: request.url(),
     });
@@ -79,6 +81,7 @@ export default class CostumersController {
       city: schema.string(),
       zip: schema.string(),
       state: schema.string(),
+      baseDiscount: schema.number(),
     });
 
     const data = await request.validate({
@@ -92,6 +95,7 @@ export default class CostumersController {
         "city.required": "Please enter the costumer city",
         "zip.required": "Please enter the costumer zip",
         "state.required": "Please enter the costumer state",
+        "baseDiscount.required": "Please enter the costumer base discount",
       },
       cacheKey: request.url(),
     });
